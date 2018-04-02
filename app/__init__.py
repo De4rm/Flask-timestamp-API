@@ -13,19 +13,32 @@ def index(data):
 	data_splited = data.split(' ')
 	date_stamp = None
 	date_string = None
+	print(data_splited[1][0:len(data_splited[1])-1])
 	
-	if len(data_splited) > 1 and data_splited[0] in months and int(data_splited[1][0:2]) in range(1,32) and len(data_splited[2]) == 4:
-		s = [data_splited[1][0:2], str(months.index(data_splited[0])+1), data_splited[2]]
-		s = '/'.join(s)
-		date_stamp = str(int(time.mktime(datetime.strptime(s, "%d/%m/%Y").timetuple())))
-		date_string = data
+	if (len(data_splited) > 1):
+		month = data_splited[0]
+		day = data_splited[1][0:len(data_splited[1])-1]
+		year = data_splited[2]
+		if (month in months) and (int(day) in range(1,32)):
+			year_len = len(year)
+			if year_len < 4:
+				addition_to_year = ["","0","00","000"]
+				year = addition_to_year[4-year_len] + year
+			elif year_len > 4:
+				year = year[0:4]
+
+			print(year)
+			s = [day, str(months.index(month)+1), year]
+			s = '/'.join(s)
+			date_stamp = int(time.mktime(datetime.strptime(s, "%d/%m/%Y").timetuple()))
+			date_string = " ".join([month, data_splited[1], str(int(year))])
 	else:
 		try:
-			date_string = datetime.fromtimestamp(int(data)).strftime('%Y-%m-%d')
-			print("entry 2")
+			int_data = int(data)
+			date_string = datetime.fromtimestamp(int_data).strftime('%Y-%m-%d')
 			date_string = date_string.split("-")
 			date_string = ' '.join([months[int(date_string[1])-1], date_string[2] + ",", date_string[0]])
-			date_stamp = data
+			date_stamp = int_data
 		except:
 			pass
 
